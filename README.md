@@ -5,5 +5,5 @@ Usage: python3 andre3000.py [-w windows] [-l linux]  [-hc chrono order] [-hr ran
 
 Required packages:
 *import os
-import sys
-import getpass
+*import sys
+*import getpass
