@@ -11,7 +11,7 @@ Usage: python3 andre3000.py [-
 -u username*
 -p port (default is 22)
 '''
-helping_page="Usage: python3 andre3000.py [-w windows] [-l linux]  [-hc chrono order] " \
+help_page="Usage: python3 andre3000.py [-w windows] [-l linux]  [-hc chrono order] " \
              "[-hr random order] [-n # of repeated connections] [-u username] [-p port]"
 import os
 import sys
@@ -39,18 +39,6 @@ def port(payload, value):
     payload.append(str(sys.argv[value + 1]))
 
 def parameters(argument, value, payload):
-    '''
-    switcher = {
-        "-w":Windows(payload),
-        "-l":Linux(payload),
-        "-n":repeat(payload, value),
-        "-hc":chrono(payload),
-        "-hr":random(payload),
-        "-u":username(payload, value),
-        "-p":port(payload, value)
-    }
-    switcher.get(argument)
-    '''
     if argument == "-w": #Windows
         Windows(payload)
     elif argument == "-l": #Linux
@@ -71,9 +59,9 @@ payload = []
 size = len(sys.argv)
 print(size)
 if size < 2:
-    print(helping_page)
+    print(help_page)
 elif sys.argv[1] == "-h":
-    print(helping_page)
+    print(help_page)
 else:
     for i in range (1, size):
         parameters(sys.argv[i], i, payload)
@@ -94,14 +82,3 @@ else:
         for i in range(0,loop_time):
 
 print(payload)
-
-
-
-
-
-#system = input("What Operating System are you on? ")
-#if system == "windows" or system == "Windows":
-#    print("You are on Windows, using copy and delete")
-#if system == "linux" or system == "Linux":
-#    print("You are using Linux, using cp and rm")
-
