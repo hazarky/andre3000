@@ -20,6 +20,7 @@ examples="python3 andre3000.py -w -hc -n 10 -a 10.10.10.180 -u user1 -p 22\n" \
 import os
 import sys
 import getpass
+import random
 def Windows(payload):
     print("We are using Windows\n")
     payload.insert(0, "windows")
@@ -74,20 +75,34 @@ def obby_type(payload):
             timeloop=payload[2]
             f = open(payload[4], "r")
             lines = f.readlines()
+            f.close()
             filesize = len(lines)
             f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
-            f.write("Host andre0\n\tHostname " + lines[0]+ "\n\tUser " + payload[5] + "\n\tPort " + payload[6] + "\n")
+            f.write("Host andre0\n\tHostname " + lines[0] + "\n\tUser " + payload[5] + "\n\tPort " + payload[6] + "\n")
+            j=0
             for i in range(1,int(timeloop)*filesize):
+                if j == filesize:
+                    j=0
+                f.write("Host andre"+str(i)+"\n\tHostname "+lines[j]+ "\n\tUser "+ payload[5] + "\n\tPort "+ payload[6]
+                        +"\n\tProxyCommand ssh.exe -q -W %h:%p andre"+ str(i-1)+"\n")
+                j=j+1
+            f.close()
+            print("ssh config is configured. To start, type: ssh andre" + str((int(timeloop)*filesize - 1)))
+    else: #random order
+        '''
+        This is difficult. We need a random number generator that only repeats the number one time.
+        Given a range of pre-determined numbers the generator must generate a random number from that range
+        without repeating more than once. These numbers will be used to connect together in the list and will provide
+        a "random" path that the connection is coming from.
+        Two Solutions: Patient Zero or Duplicates 
+        Patient Zero: All connections are connected and are traced back to andre0 (hardcoded list)
+        Duplicate: all connections are on the random field and is up to the generator to make a list (randomly created)
+        '''
+        if payload[3] == "-a": #single address
+            timeloop=payload[2]
+            f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
+            f.write("Host andre0\n\tHostname " + payload[4] + "\n\tUser " + payload[5] + "\n\tPort " + payload[6] + "\n")
 
-
-
-
-
-
-
-
-    else:#random order
-        print("You are using random")
 
 def parameters(argument, value, payload):
     if argument == "-w": #Windows
@@ -123,9 +138,4 @@ else:
     for i in range (1, size):
         parameters(sys.argv[i], i, payload)
     obby_type(payload)
-
-#        if payload
-        #f.write("Host andre0\n\tHostname 192.168.181.128\n\tUser kali\n\tPort 22\n")
-        #for i in range(0,loop_time):
-
 print(payload)
