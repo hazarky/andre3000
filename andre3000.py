@@ -40,7 +40,7 @@ def repeat(payload, value):
 def chrono(payload):
     print("You entered chronological order")
     payload.append("chrono")
-def random(payload):
+def randomset(payload):
     print("You entered random order")
     payload.append("random")
 def username(payload, value):
@@ -102,7 +102,66 @@ def obby_type(payload):
             timeloop=payload[2]
             f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
             f.write("Host andre0\n\tHostname " + payload[4] + "\n\tUser " + payload[5] + "\n\tPort " + payload[6] + "\n")
+            i=0
+            entrylist=[0] #necessary or it hangs
+            while len(entrylist) < int(timeloop): # This uses patient Zero version since its one address
+                entry = random.randrange(1,int(timeloop))
+                print("Setting up entry #"+ str(len(entrylist)))
+                if search(entrylist, entry) != True:
+                    if i==0:
+                        f.write("Host andre" + str(entry) + "\n\tHostname " + payload[4] + "\n\tUser " + payload[
+                            5] + "\n\tPort " + payload[6]+ "\n\tProxyCommand ssh.exe -q -W %h:%p andre0\n")
+                        i=i+1
+                        entrylist.append(entry)
+                    else:
+                        f.write("Host andre" + str(entry) + "\n\tHostname " + payload[4] + "\n\tUser " + payload[
+                            5] + "\n\tPort " + payload[6] + "\n\tProxyCommand ssh.exe -q -W %h:%p andre"+str(len(entrylist)-1)+"\n")
+                        entrylist.append(entry)
+                        i=i+1
+            f.close()
+            entrylist.clear()
+        else: #payload[3] =="-A":
+            timeloop=payload[2]
+            f = open(payload[4], "r")
+            lines = f.readlines()
+            f.close()
+            filesize = len(lines)
+            connections = timeloop*filesize
+            f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
+            i=0
+            entrylist=[]
+            proxentrylist=[]
+            while len(entrylist) < int(connections):
+                entry = random.randrange(0, int(connections))
+                proxentry = random.randrange(0, int(connections))
+                print("Setting up entry #" + str(len(entrylist)))
+                if search(entrylist, entry) != True and search(proxentrylist,proxentry) !=True:
+                    if i < filesize:
+                        if random.randrange(0,5) < 1: #20% chance
+                            f.write("Host andre" + str(entry) + "\n\tHostname " + lines[i] + "\n\tUser " + payload[
+                                5] + "\n\tPort " + payload[6] +"\n")
+                            i=i+1
+                            entrylist.append(entry)
+                        else:
+                            f.write("Host andre" + str(entry) + "\n\tHostname " + lines[i] + "\n\tUser " + payload[
+                                5] + "\n\tPort " + payload[6] + "\n\tProxyCommand ssh.exe -q -W %h:%p andre" +
+                                                str(proxentry) + "\n")
+                            i=i+1
+                            entrylist.append(entry)
+                            proxentrylist.append(entry)
+                    else:
+                        i = 0
 
+
+
+
+
+
+def search(list, entry):
+    for i in range (len(list)):
+        if list[i] == entry:
+            return True
+    return False
 
 def parameters(argument, value, payload):
     if argument == "-w": #Windows
@@ -118,7 +177,7 @@ def parameters(argument, value, payload):
     elif argument == "-hc": # Chronological Order
         chrono(payload)
     elif argument == "-hr": # Random Order
-        random(payload)
+        randomset(payload)
     elif argument == "-u": # Username
         username(payload, value)
     elif argument == "-p": # Port number
