@@ -22,40 +22,42 @@ import sys
 import getpass
 import random
 def Windows(payload):
-    print("We are using Windows\n")
+   # print("We are using Windows\n")
     payload.insert(0, "windows")
     hostname = getpass.getuser()
     print("Preparing Config Files!")
     os.system("copy C:\\Users\\" + hostname + "\\.ssh\\config C:\\Users\\" + hostname + "\\.ssh\\config_old")
 def Linux(payload):
-    print("We are using linux\n")
+    #print("We are using linux\n")
     payload.insert(0,"linux")
     hostname = getpass.getuser()
     print("Preparing Config Files!")
     path = "/home/"
     os.system("cp " + path + hostname + "/.ssh/config " + hostname + "/.ssh/config_old")
 def repeat(payload, value):
-    print("You entered "+ sys.argv[value]+ " "+ sys.argv[value+1])
+    #print("You entered "+ sys.argv[value]+ " "+ sys.argv[value+1])
     payload.append(str(sys.argv[value+1]))
 def chrono(payload):
-    print("You entered chronological order")
+    #print("You entered chronological order")
+    print("Preparing structure in chronological order")
     payload.append("chrono")
 def randomset(payload):
-    print("You entered random order")
+    #print("You entered random order")
+    print("Preparing structure in a random order")
     payload.append("random")
 def username(payload, value):
-    print("You entered "+ sys.argv[value]+ " "+ sys.argv[value+1])
-    print(value+1)
+    #print("You entered "+ sys.argv[value]+ " "+ sys.argv[value+1])
+    #print(value+1)
     payload.append(str(sys.argv[value+1]))
 def port(payload, value):
-    print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
+    #print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
     payload.append(str(sys.argv[value + 1]))
 def address(payload, value):
-    print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
+    #print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
     payload.append(sys.argv[value])
     payload.append(str(sys.argv[value+1]))
 def listaddress(payload, value):
-    print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
+    #print("You entered " + sys.argv[value] + " " + sys.argv[value + 1])
     payload.append(sys.argv[value])
     payload.append(str(sys.argv[value+1]))
 def obby_type(payload):
@@ -106,7 +108,7 @@ def obby_type(payload):
             entrylist=[0] #necessary or it hangs
             while len(entrylist) < int(timeloop): # This uses patient Zero version since its one address
                 entry = random.randrange(1,int(timeloop))
-                print("Setting up entry #"+ str(len(entrylist)))
+                #print("Setting up entry #"+ str(len(entrylist)))
                 if search(entrylist, entry) != True:
                     if i==0:
                         f.write("Host andre" + str(entry) + "\n\tHostname " + payload[4] + "\n\tUser " + payload[
@@ -125,6 +127,27 @@ def obby_type(payload):
             f = open(payload[4], "r")
             lines = f.readlines()
             f.close()
+            suggestions=[]
+            f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
+            for i in range(0,len(lines)):
+                f.write("Host andre" + str(i) + "\n\tHostname " + lines[i] + "\n\tUser " + payload[5] +
+                        "\n\tPort "+ payload[6] +"\n")
+                MIN = (int(timeloop)*i)+3000
+                MAX = (int(timeloop)*(i+1)+2999)
+                for j in range(MIN, MAX+1):
+                    if j == MIN:
+                        f.write("Host andre" + str(j) + "\n\tHostname " + str(lines[random.randrange(0,len(lines))]) +
+                                "\n\tUser " + payload[5] + "\n\tPort " + payload[6] +
+                                "\n\tProxyCommand ssh.exe -q -W %h:%p andre" + str(i) + "\n")
+                    elif j == MAX:
+                        suggestions.append("andre "+ str(i)+ ": "+ str(MIN) + ":"+str(MAX))
+                    else:
+                        f.write("Host andre" + str(j) + "\n\tHostname " + str(lines[random.randrange(0, len(lines))]) +
+                                "\n\tUser " + payload[5] + "\n\tPort " + payload[6] +
+                                "\n\tProxyCommand ssh.exe -q -W %h:%p andre" + str(j-1) + "\n")
+            f.close()
+            print(suggestions)
+            '''
             filesize = len(lines)
             connections = timeloop*filesize
             f = open("C:\\Users\\" + getpass.getuser() + "\\.ssh\\config", "w")
@@ -151,7 +174,7 @@ def obby_type(payload):
                             proxentrylist.append(entry)
                     else:
                         i = 0
-
+'''
 
 
 
@@ -183,10 +206,11 @@ def parameters(argument, value, payload):
     elif argument == "-p": # Port number
         port(payload, value)
     else:
-        print("Incorrect Option")
+        print()
+        #print("Incorrect Option")
 payload = []
 size = len(sys.argv)
-print(size)
+#print(size)
 if size < 2:
     print(help_page)
     print(examples)
@@ -197,4 +221,4 @@ else:
     for i in range (1, size):
         parameters(sys.argv[i], i, payload)
     obby_type(payload)
-print(payload)
+#print(payload)
