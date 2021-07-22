@@ -1,4 +1,7 @@
 '''
+Author: Kordell Huthcins
+
+######################
 Andre3000 Help page
 Usage: python3 andre3000.py [-
 
@@ -186,7 +189,7 @@ def search(list, entry):
             return True
     return False
 
-def parameters(argument, value, payload):
+def parameters(argument, value, payload):#Grab output
     if argument == "-w": #Windows
         Windows(payload)
     elif argument == "-l": #Linux
@@ -211,14 +214,14 @@ def parameters(argument, value, payload):
 payload = []
 size = len(sys.argv)
 #print(size)
-if size < 2:
+if size < 2: # They only enter andre3000
     print(help_page)
     print(examples)
-elif sys.argv[1] == "-h":
+elif sys.argv[1] == "-h": # They ask for help
     print(help_page)
     print(examples)
 else:
-    for i in range (1, size):
+    for i in range (1, size): 
         parameters(sys.argv[i], i, payload)
     obby_type(payload)
 #print(payload)
